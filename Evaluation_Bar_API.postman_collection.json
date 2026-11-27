@@ -1,0 +1,731 @@
+{
+	"info": {
+		"_postman_id": "a918237b-1823-4e89-a291-7f9821738129",
+		"name": "Evaluation API Platform - Bar Management",
+		"description": "Collection complète pour tester l'API de gestion de bar avec rôles : Patron, Barman, Serveur et Client.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "token_patron",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "token_barman",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "token_serveur",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Authentification (JWT)",
+			"item": [
+				{
+					"name": "Connexion Patron",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (response.token) {",
+									"    pm.collectionVariables.set('token_patron', response.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"patron\",\n    \"password\": \"patron123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/login_check",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "login_check"]
+						}
+					}
+				},
+				{
+					"name": "Connexion Barman",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (response.token) {",
+									"    pm.collectionVariables.set('token_barman', response.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"barman\",\n    \"password\": \"barman123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/login_check",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "login_check"]
+						}
+					}
+				},
+				{
+					"name": "Connexion Serveur",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (response.token) {",
+									"    pm.collectionVariables.set('token_serveur', response.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"mustapha-serveur\",\n    \"password\": \"serveur123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/login_check",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "login_check"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Patron - Gestion du personnel (Users)",
+			"item": [
+				{
+					"name": "Lister tous les utilisateurs (Patron)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_patron}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/ld+json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users"]
+						}
+					}
+				},
+				{
+					"name": "Créer un nouveau serveur (Patron)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_patron}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"karim-serveur\",\n    \"plainPassword\": \"password123\",\n    \"roles\": [\"ROLE_SERVEUR\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users"]
+						}
+					}
+				},
+				{
+					"name": "Créer un nouveau barman (Patron)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_patron}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"alex-barman\",\n    \"plainPassword\": \"password123\",\n    \"roles\": [\"ROLE_BARMAN\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users"]
+						}
+					}
+				},
+				{
+					"name": "Afficher le détail d'un utilisateur (Patron)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_patron}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/ld+json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/2",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "2"]
+						}
+					}
+				},
+				{
+					"name": "Modifier un utilisateur (Patron)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_patron}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/merge-patch+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"barman-chef\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/2",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "2"]
+						}
+					}
+				},
+				{
+					"name": "Supprimer un utilisateur (Patron)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_patron}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"url": {
+							"raw": "{{baseUrl}}/api/users/4",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "4"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Barman - Boissons, Médias & Commandes en cours",
+			"item": [
+				{
+					"name": "Upload Media photo (Barman)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_barman}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/media",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "media"]
+						}
+					}
+				},
+				{
+					"name": "Créer une nouvelle boisson (Barman)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_barman}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nom\": \"Gin Tonic\",\n    \"prix\": \"7.50\",\n    \"photo\": \"/api/media/1\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/boissons",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "boissons"]
+						}
+					}
+				},
+				{
+					"name": "Lister les boissons (Public / Barman / Serveur / Client)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/ld+json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/boissons",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "boissons"]
+						}
+					}
+				},
+				{
+					"name": "Afficher le détail d'une boisson (Public / Client)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/ld+json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/boissons/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "boissons", "1"]
+						}
+					}
+				},
+				{
+					"name": "Modifier une boisson (Barman)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_barman}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/merge-patch+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"prix\": \"8.00\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/boissons/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "boissons", "1"]
+						}
+					}
+				},
+				{
+					"name": "Supprimer une boisson (Barman)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_barman}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"url": {
+							"raw": "{{baseUrl}}/api/boissons/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "boissons", "1"]
+						}
+					}
+				},
+				{
+					"name": "Voir les commandes en cours de préparation (Barman)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_barman}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/ld+json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/commandes?status=en%20cours%20de%20pr%C3%A9paration",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "commandes"],
+							"query": [
+								{
+									"key": "status",
+									"value": "en%20cours%20de%20pr%C3%A9paration"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "S'attribuer une commande (Barman)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_barman}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/merge-patch+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"barman\": \"/api/users/2\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/commandes/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "commandes", "1"]
+						}
+					}
+				},
+				{
+					"name": "Modifier le statut d'une commande pour prête (Barman)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_barman}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/merge-patch+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"prête\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/commandes/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "commandes", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Serveur - Gestion des commandes & paiements",
+			"item": [
+				{
+					"name": "Enregistrer une nouvelle commande (Serveur)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_serveur}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"numeroTable\": 5,\n    \"boissons\": [\n        \"/api/boissons/1\",\n        \"/api/boissons/2\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/commandes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "commandes"]
+						}
+					}
+				},
+				{
+					"name": "Voir le détail d'une commande (Serveur / Barman / Patron)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_serveur}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/ld+json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/commandes/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "commandes", "1"]
+						}
+					}
+				},
+				{
+					"name": "Mettre à jour les boissons d'une commande non payée (Serveur)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_serveur}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/merge-patch+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"boissons\": [\n        \"/api/boissons/1\",\n        \"/api/boissons/3\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/commandes/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "commandes", "1"]
+						}
+					}
+				},
+				{
+					"name": "Enregistrer le paiement d'une commande (Serveur)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_serveur}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/merge-patch+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"payée\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/commandes/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "commandes", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Filtre par période (Serveur, Barman, Patron)",
+			"item": [
+				{
+					"name": "Lister les commandes passées sur une période de son choix",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_serveur}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/ld+json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/commandes?createdAt[after]=2026-11-01&createdAt[before]=2026-12-31",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "commandes"],
+							"query": [
+								{
+									"key": "createdAt[after]",
+									"value": "2026-11-01"
+								},
+								{
+									"key": "createdAt[before]",
+									"value": "2026-12-31"
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}
